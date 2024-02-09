@@ -6,7 +6,7 @@ Version: 1.0
 Author: MetaSystems (for PKS)
 */
 
-function custom_form_html() {
+function meta_yookassa_form_html() {
   ob_start(); ?>
   <style>
     #custom-form {
@@ -155,10 +155,10 @@ function handle_form_submission() {
 }
 add_action('init', 'handle_form_submission');
 
-function display_custom_form() {
-  return custom_form_html();
+function display_meta_yookassa_form() {
+  return meta_yookassa_form_html();
 }
-add_shortcode('custom_form', 'display_custom_form');
+add_shortcode('meta_yookassa_form', 'display_meta_yookassa_form');
 
 function meta_yookassa_plugin_menu() {
   add_menu_page(
