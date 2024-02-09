@@ -121,6 +121,7 @@ function handle_form_submission() {
         'account_number' => $account_number,
       ),
       'test' => $enable_test_mode,
+      "capture" => true,
       "refundable" => false,
     );
 
