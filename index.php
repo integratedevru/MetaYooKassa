@@ -9,7 +9,7 @@ Author: MetaSystems (for PKS)
 function meta_yookassa_form_html() {
   ob_start(); ?>
   <style>
-    #custom-form {
+    #meta-yookassa-form {
       max-width: 400px;
       margin: 0 auto;
       font-family: Arial, sans-serif;
