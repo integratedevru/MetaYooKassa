@@ -305,7 +305,7 @@ function yookassa_download_data_callback() {
 
   $data = json_decode($response, true);
 
-  $csv_content = "Full Name,Captured At,District,Account Number,Amount,Income Amount\n";
+  $csv_content = "Full Name;Captured At;District;Account Number;Amount;Income Amount\n";
 
   foreach ($data['items'] as $item) {
     $amount = $item['amount']['value'];
