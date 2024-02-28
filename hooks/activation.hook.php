@@ -55,7 +55,7 @@ function get_counter_value_sql() {
         PRIMARY KEY  (id),
         FOREIGN KEY (invoice_id) REFERENCES $invoice_table_name(id)
     ) $charset_collate;";
-    return $sql();
+    return $sql;
 }
 
 function get_payment_types_table_name() {
