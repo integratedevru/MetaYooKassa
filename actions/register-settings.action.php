@@ -1,6 +1,5 @@
 <?php
 
-
 function metayookassa_register_settings() {
   register_setting(
       'meta_yookassa_settings',

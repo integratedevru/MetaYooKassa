@@ -60,18 +60,18 @@ function get_counter_value_sql() {
 
 function get_payment_types_table_name() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'payment_types';
+    $table_name = $wpdb->prefix . 'metayookassa_payment_types';
     return $table_name;
 }
 
 function get_invoice_table_name() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'invoice';
+    $table_name = $wpdb->prefix . 'metayookassa_invoice';
     return $table_name;
 }
 
 function get_counter_value_table_name() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'counter_value';
+    $table_name = $wpdb->prefix . 'metayookassa_counter_value';
     return $table_name;
 }
