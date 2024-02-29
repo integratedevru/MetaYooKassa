@@ -1,6 +1,11 @@
 <?php
 
 function form_html() {
+  global $wpdb;
+
+  $tableName = $wpdb->prefix . 'metayookassa_payment_types';
+  $districtOptions = $wpdb->get_col("SELECT DISTINCT region FROM $tableName ORDER BY region");
+
   ob_start(); ?>
   <style>
     #meta-yookassa-form {
@@ -43,31 +48,7 @@ function form_html() {
     <label class="form-label" for="district">Район:</label>
     <select class="form-input" style="width: 100%;" name="district" required>
         <option value="" disabled selected>Выберите район</option>
-        <option value="Бежаницкий район">Бежаницкий район</option>
-        <option value="Великолукский район">Великолукский район</option>
-        <option value="Гдовский район">Гдовский район</option>
-        <option value="Дедовичский район">Дедовичский район</option>
-        <option value="Дновский район">Дновский район</option>
-        <option value="Красногородский район">Красногородский район</option>
-        <option value="Куньинский район">Куньинский район</option>
-        <option value="Локнянский район">Локнянский район</option>
-        <option value="Невельский район">Невельский район</option>
-        <option value="Новоржевский район">Новоржевский район</option>
-        <option value="Новосокольнический район">Новосокольнический район</option>
-        <option value="Опочецкий район">Опочецкий район</option>
-        <option value="Островский район">Островский район</option>
-        <option value="Палкинский район">Палкинский район</option>
-        <option value="Печорский район">Печорский район</option>
-        <option value="Плюсский район">Плюсский район</option>
-        <option value="Порховский район">Порховский район</option>
-        <option value="Псков">Псков</option>
-        <option value="Псковский район">Псковский район</option>
-        <option value="Пустошкинский район">Пустошкинский район</option>
-        <option value="Пушкиногорский район">Пушкиногорский район</option>
-        <option value="Пыталовский район">Пыталовский район</option>
-        <option value="Себежский район">Себежский район</option>
-        <option value="Стругокрасненский район">Стругокрасненский район</option>
-        <option value="Усвятский район">Усвятский район</option>
+        <?php foreach ($districtOptions as $option) { echo "<option value='$option'>$option</option>"; } ?>
     </select>
     <label class="form-label" for="account_number">Номер лицевого счёта ЖКХ:</label>
     <input class="form-input" type="text" pattern="\d+" name="account_number" required>

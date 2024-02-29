@@ -13,7 +13,6 @@ function metayookassa_register_settings() {
       'meta_yookassa_settings',
       'meta_yookassa_enable_test_mode',
   );
-
   add_settings_section(
       'meta_yookassa_settings_section',
       'Настройки интеграции с ЮKassa',
@@ -44,7 +43,7 @@ function metayookassa_register_settings() {
 }
 
 function meta_yookassa_settings_section_callback() {
-  echo '<p></p>';
+  echo '';
 }
 
 function meta_yookassa_shop_id_callback() {

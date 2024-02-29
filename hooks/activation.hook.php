@@ -19,6 +19,7 @@ function get_payment_types_sql() {
         region VARCHAR(50) NOT NULL,
         reester_number VARCHAR(50) NOT NULL,
         type_of_payment VARCHAR(3) NOT NULL,
+        receipt_name VARCHAR(50) NOT NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
     return $sql;
