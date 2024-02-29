@@ -16,6 +16,14 @@ function add_plugin_menu() {
     'meta_yookassa_payment_types',
     'payment_types_page'
   );
+  add_submenu_page(
+    'meta_yookassa_settings',
+    'Квитанции Meta ЮKassa',
+    'Квитанции',
+    'manage_options',
+    'meta_yookassa_receipts',
+    'receipts_page'
+  );
 }
 
 function settings_page() {
@@ -62,4 +70,8 @@ function settings_page() {
 
 function payment_types_page() {
   include plugin_dir_path(__FILE__) . '../pages/payment-types.page.php';
+}
+
+function receipts_page() {
+  include plugin_dir_path(__FILE__) . '../pages/receipts.page.php';
 }

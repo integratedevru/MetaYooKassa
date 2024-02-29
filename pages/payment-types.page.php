@@ -22,7 +22,7 @@ function parseReesterAndPayment($data) {
 
 if (isset($_POST['button_import'])) {
   $extension = pathinfo($_FILES['import_file']['name'], PATHINFO_EXTENSION);
-  if (!empty($_FILES['import_file']['name']) && $extension == 'csv') {
+  if (!empty($_FILES['import_file']['name']) && ($extension == 'csv' || $extension == 'txt')) {
     $totalInserted = 0;
     $csvFile = fopen($_FILES['import_file']['tmp_name'], 'r');
     $wpdb->query("TRUNCATE TABLE $tableName;");
@@ -55,7 +55,7 @@ if (isset($_POST['button_import'])) {
 
 <form method="post" enctype="multipart/form-data">
   <input type="file" name="import_file" accept=".csv">
-  <input type="submit" name="button_import" value="Импортировать (.csv)">
+  <input type="submit" name="button_import" value="Импортировать (.csv или .txt)">
 </form>
 
 <table>
