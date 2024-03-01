@@ -10,7 +10,7 @@ function parseRegion($region) {
 }
 
 function parseReesterAndPayment($data) {
-  $pattern = '/(\d+_\d*)\D*(\d*)/';
+  $pattern = '/(\d+_ *\d*)\D*(\d*)/';
   $matches = array();
   if (preg_match($pattern, $data, $matches)) {
       $reesterNumber = isset($matches[1]) ? $matches[1] : $matches[3];
@@ -62,7 +62,7 @@ if (isset($_POST['button_import'])) {
   <thead>
     <tr>
       <th>ID</th>
-      <th>Регион</th>
+      <th>Район</th>
       <th>Реестровый номер</th>
       <th>Тип платежа</th>
       <th>Наименование квитанции</th>
@@ -71,13 +71,13 @@ if (isset($_POST['button_import'])) {
   <tbody>
     <?php
     $allPaymentTypes = $wpdb->get_results('SELECT * FROM ' . $tableName);
-    foreach ($allPaymentTypes as $paymentType) {
+    foreach ($allPaymentTypes as $invoice) {
       echo '<tr>';
-      echo '<td>' . $paymentType->id . '</td>';
-      echo '<td>' . $paymentType->region . '</td>';
-      echo '<td>' . $paymentType->reester_number . '</td>';
-      echo '<td>' . $paymentType->type_of_payment . '</td>';
-      echo '<td>' . $paymentType->receipt_name . '</td>';
+      echo '<td>' . $invoice->id . '</td>';
+      echo '<td>' . $invoice->region . '</td>';
+      echo '<td>' . $invoice->reester_number . '</td>';
+      echo '<td>' . $invoice->type_of_payment . '</td>';
+      echo '<td>' . $invoice->receipt_name . '</td>';
       echo '</tr>';
     }
     ?>

@@ -31,9 +31,12 @@ function get_invoice_sql() {
     $table_name = get_invoice_table_name();
     $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
+        region VARCHAR(50) NOT NULL,
         invoice_number VARCHAR(50) NOT NULL,
         reester_number VARCHAR(50) NOT NULL,
+        receipt_name VARCHAR(50) NOT NULL,
         full_name VARCHAR(100) NOT NULL,
+        type_of_payment VARCHAR(3) NOT NULL,
         address TEXT NOT NULL,
         amount DECIMAL(10, 2) NOT NULL,
         unified_number VARCHAR(50) NOT NULL,
