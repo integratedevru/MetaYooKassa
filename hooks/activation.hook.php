@@ -40,7 +40,8 @@ function get_invoice_sql() {
         address TEXT NOT NULL,
         amount DECIMAL(10, 2) NOT NULL,
         unified_number VARCHAR(50) NOT NULL,
-        PRIMARY KEY  (id)
+        PRIMARY KEY  (id),
+        INDEX region_type_invoice (region, type_of_payment, invoice_number)
     ) $charset_collate;";
     return $sql;
 }
