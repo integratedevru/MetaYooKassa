@@ -2,12 +2,12 @@
 
 function handle_form_submission() {
   if ($_SERVER['REQUEST_METHOD'] === 'POST' 
-    && isset($_POST['full_name']) 
+    && isset($_POST['type_of_payment'])
     && isset($_POST['district']) 
     && isset($_POST['account_number']) 
     && isset($_POST['amount'])
   ) {
-    $full_name = sanitize_text_field($_POST['full_name']);
+    $type_of_payment = sanitize_text_field($_POST['type_of_payment']);
     $district = sanitize_text_field($_POST['district']);
     $account_number = sanitize_text_field($_POST['account_number']);
     $amount = sanitize_text_field($_POST['amount']);
@@ -29,9 +29,9 @@ function handle_form_submission() {
         'type' => 'redirect',
         'return_url' => $return_url,
       ),
-      'description' => "Оплата услуг жкх $district по счёту $account_number от $full_name",
+      'description' => "Оплата услуг жкх по району $district и типу $type_of_payment. Счёт $account_number",
       'metadata' => array(
-        'full_name' => $full_name,
+        'type_of_payment' => $type_of_payment,
         'district' => $district,
         'account_number' => $account_number,
       ),
