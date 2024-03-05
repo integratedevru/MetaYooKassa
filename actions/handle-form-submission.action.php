@@ -12,6 +12,25 @@ function handle_form_submission() {
     $account_number = sanitize_text_field($_POST['account_number']);
     $amount = sanitize_text_field($_POST['amount']);
 
+    $counters = array();
+
+    for ($i = 0; $i <= 5; $i++) {
+      if (isset($_POST['counter' . $i . 'ServiceName']) && isset($_POST['counter' . $i . 'MeterNumber']) &&
+        isset($_POST['counter' . $i . 'OldReading']) && isset($_POST['counter' . $i . 'NewReading'])) {
+        $service_name = sanitize_text_field($_POST['counter' . $i . 'ServiceName']);
+        $meter_number = sanitize_text_field($_POST['counter' . $i . 'MeterNumber']);
+        $old_reading = sanitize_text_field($_POST['counter' . $i . 'OldReading']);
+        $new_reading = sanitize_text_field($_POST['counter' . $i . 'NewReading']);
+        $counters[] = $service_name . '@' . $meter_number . '@@' . $new_reading;
+        // $counters[] = array(
+        //   'service_name' => sanitize_text_field($_POST['counter' . $i . 'ServiceName']),
+        //   'meter_number' => sanitize_text_field($_POST['counter' . $i . 'MeterNumber']),
+        //   'old_reading' => sanitize_text_field($_POST['counter' . $i . 'OldReading']),
+        //   'new_reading' => sanitize_text_field($_POST['counter' . $i . 'NewReading']),
+        // );
+      }
+    }
+
     $api_url = 'https://api.yookassa.ru/v3/payments';
     $api_key = get_option('meta_yookassa_shop_id') . ':' . get_option('meta_yookassa_secret_key');
     $idempotence_key = 'key' . uniqid();
@@ -24,23 +43,24 @@ function handle_form_submission() {
         'value' => $amount,
         'currency' => 'RUB',
       ),
-      'capture' => true,
       'confirmation' => array(
         'type' => 'redirect',
         'return_url' => $return_url,
       ),
-      'description' => "Оплата услуг жкх по району $district и типу $type_of_payment. Счёт $account_number",
+      'description' => "Оплата услуг жкх по счёту $account_number ($district, тип платежа $type_of_payment). Переданы показатели счётчиков: " . count($counters),
       'metadata' => array(
         'type_of_payment' => $type_of_payment,
         'district' => $district,
         'account_number' => $account_number,
+        'counters' => implode('\n', array_column($counters, 'service_name')),
       ),
       'test' => $enable_test_mode,
-      "capture" => true,
-      "refundable" => false,
+      'capture' => true,
+      'refundable' => false,
     );
 
     $json_data = json_encode($request_data);
+    echo ''. $json_data .'';
 
     $curl_options = array(
       CURLOPT_URL => $api_url,

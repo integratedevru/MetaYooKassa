@@ -139,9 +139,9 @@ function form_html() {
             var td3 = document.createElement('td');
             var td4 = document.createElement('td');
             td1.innerHTML = `<input type="text" class="form-input" value="${data.counters[i].service_name}" name="counter${i}ServiceName" readonly>`;
-            td2.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].meter_number}" name="counter${i}MeterNumber" readonly>`;
-            td3.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].old_reading}" name="counter${i}OldReading" readonly>`;
-            td4.innerHTML = `<input type="text" class="form-input" pattern="\d+" name="counter${i}NewReading">`;
+            td2.innerHTML = `<input type="text" class="form-input" value="${data.counters[i].meter_number}" name="counter${i}MeterNumber" readonly>`;
+            td3.innerHTML = `<input type="text" class="form-input" pattern="\\d+" value="${data.counters[i].old_reading}" name="counter${i}OldReading" readonly>`;
+            td4.innerHTML = `<input type="text" class="form-input" pattern="\\d+" name="counter${i}NewReading">`;
             tr.appendChild(td1);
             tr.appendChild(td2);
             tr.appendChild(td3);
