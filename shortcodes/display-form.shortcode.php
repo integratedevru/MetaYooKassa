@@ -45,6 +45,10 @@ function form_html() {
     #meta-yookassa-form .form-submit:hover {
       background-color: #45a049;
     }
+    #district[readonly] {
+      background-color: #f0f0f0;
+      pointer-events: none;
+    }
   </style>
   <form id="meta-yookassa-form" method="post">
     <div id="first-part">
@@ -62,7 +66,7 @@ function form_html() {
     </div>
     <div id="second-part" class="hidden">
       <label class="form-label" for="address">Адрес:</label>
-      <input class="form-input" type="text" id="address" name="address" disabled>
+      <input class="form-input" type="text" id="address" name="address" readonly>
       <p>Показатели счётчиков:</p>
       <table><tbody id="counters"></tbody></table>
       <label class="form-label" for="amount">Сумма платежа (руб.):</label>
@@ -97,9 +101,9 @@ function form_html() {
             document.getElementById('error-message').classList.add('hidden');
           }
           // document.getElementById('first-part').classList.add('hidden');
-          document.getElementById('district').disabled = true;
-          document.getElementById('type_of_payment').disabled = true;
-          document.getElementById('account_number').disabled = true;
+          document.getElementById('district').setAttribute('readonly', 'readonly');
+          document.getElementById('type_of_payment').setAttribute('readonly', 'readonly');
+          document.getElementById('account_number').setAttribute('readonly', 'readonly');
           var div = document.getElementById('second-part');
           div.classList.remove('hidden');
           document.getElementById('address').value = data.address;
@@ -134,9 +138,9 @@ function form_html() {
             var td2 = document.createElement('td');
             var td3 = document.createElement('td');
             var td4 = document.createElement('td');
-            td1.innerHTML = `<input type="text" class="form-input" value="${data.counters[i].service_name}" name="counter${i}ServiceName" disabled>`;
-            td2.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].meter_number}" name="counter${i}MeterNumber" disabled>`;
-            td3.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].old_reading}" name="counter${i}OldReading" disabled>`;
+            td1.innerHTML = `<input type="text" class="form-input" value="${data.counters[i].service_name}" name="counter${i}ServiceName" readonly>`;
+            td2.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].meter_number}" name="counter${i}MeterNumber" readonly>`;
+            td3.innerHTML = `<input type="text" class="form-input" pattern="\d+" value="${data.counters[i].old_reading}" name="counter${i}OldReading" readonly>`;
             td4.innerHTML = `<input type="text" class="form-input" pattern="\d+" name="counter${i}NewReading">`;
             tr.appendChild(td1);
             tr.appendChild(td2);
