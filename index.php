@@ -31,4 +31,5 @@ add_action('wp_ajax_yookassa_download_data', 'yookassa_download_data');
 include_once(plugin_dir_path(__FILE__) . 'actions/yookassa-download-data.action.php');
 
 add_action('wp_ajax_get_payment_data', 'get_payment_data');
+add_action('wp_ajax_nopriv_get_payment_data', 'get_payment_data');
 include_once(plugin_dir_path(__FILE__) . 'actions/get-payment-data.action.php');

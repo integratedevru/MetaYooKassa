@@ -20,17 +20,21 @@ function form_html() {
       border-radius: 8px;
       padding: 15px;
     }
-    .form-label {
+    #meta-yookassa-form .form-label {
       display: block;
       margin-top: 10px;
     }
-    .form-input {
+    #meta-yookassa-form .form-input {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 5px;
+    }
+    #meta-yookassa-form .form-input[readonly] {
+      background-color: #f0f0f0;
+      pointer-events: none;
     }
     #meta-yookassa-form .form-submit {
       background-color: #4caf50;
@@ -45,11 +49,8 @@ function form_html() {
     #meta-yookassa-form .form-submit:hover {
       background-color: #45a049;
     }
-    #district[readonly] {
-      background-color: #f0f0f0;
-      pointer-events: none;
-    }
   </style>
+
   <form id="meta-yookassa-form" method="post">
     <div id="first-part">
       <label class="form-label" for="district">Район:</label>
@@ -74,6 +75,7 @@ function form_html() {
       <input class="form-submit" type="submit" value="Оплатить с помощью ЮKassa и передать показатели счётчиков">
     </div>
   </form>
+
   <script>
     function switchToSecondPart() {
       document.getElementById('switch-button').classList.add('hidden');
@@ -100,7 +102,6 @@ function form_html() {
           } else {
             document.getElementById('error-message').classList.add('hidden');
           }
-          // document.getElementById('first-part').classList.add('hidden');
           document.getElementById('district').setAttribute('readonly', 'readonly');
           document.getElementById('type_of_payment').setAttribute('readonly', 'readonly');
           document.getElementById('account_number').setAttribute('readonly', 'readonly');

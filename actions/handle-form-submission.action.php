@@ -22,12 +22,6 @@ function handle_form_submission() {
         $old_reading = sanitize_text_field($_POST['counter' . $i . 'OldReading']);
         $new_reading = sanitize_text_field($_POST['counter' . $i . 'NewReading']);
         $counters[] = $service_name . '@' . $meter_number . '@@' . $new_reading;
-        // $counters[] = array(
-        //   'service_name' => sanitize_text_field($_POST['counter' . $i . 'ServiceName']),
-        //   'meter_number' => sanitize_text_field($_POST['counter' . $i . 'MeterNumber']),
-        //   'old_reading' => sanitize_text_field($_POST['counter' . $i . 'OldReading']),
-        //   'new_reading' => sanitize_text_field($_POST['counter' . $i . 'NewReading']),
-        // );
       }
     }
 
@@ -60,7 +54,6 @@ function handle_form_submission() {
     );
 
     $json_data = json_encode($request_data);
-    echo ''. $json_data .'';
 
     $curl_options = array(
       CURLOPT_URL => $api_url,
