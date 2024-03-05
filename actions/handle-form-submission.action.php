@@ -7,7 +7,6 @@ function handle_form_submission() {
     && isset($_POST['account_number']) 
     && isset($_POST['amount'])
   ) {
-    error_log('Form was submitted');
     $type_of_payment = sanitize_text_field($_POST['type_of_payment']);
     $district = sanitize_text_field($_POST['district']);
     $account_number = sanitize_text_field($_POST['account_number']);
