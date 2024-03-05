@@ -46,7 +46,7 @@ function handle_form_submission() {
         'type_of_payment' => $type_of_payment,
         'district' => $district,
         'account_number' => $account_number,
-        'counters' => implode('\n', array_column($counters, 'service_name')),
+        'counters' => implode(';', $counters),
       ),
       'test' => $enable_test_mode,
       'capture' => true,
