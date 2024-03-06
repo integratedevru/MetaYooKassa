@@ -13,6 +13,34 @@ function metayookassa_register_settings() {
       'meta_yookassa_settings',
       'meta_yookassa_enable_test_mode',
   );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_host',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_username',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_password',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_port',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_name',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_subject',
+  );
+  register_setting(
+      'meta_yookassa_settings',
+      'meta_yookassa_mail_address',
+  );
   add_settings_section(
       'meta_yookassa_settings_section',
       'Настройки интеграции с ЮKassa',
@@ -40,6 +68,61 @@ function metayookassa_register_settings() {
       'meta_yookassa_settings',
       'meta_yookassa_settings_section'
   );
+  add_settings_section(
+      'meta_yookassa_settings_section_2',
+      'Настройки отправки данных по электронной почте',
+      'meta_yookassa_settings_section_2_callback',
+      'meta_yookassa_settings',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_host',
+      'Хост почты',
+      'meta_yookassa_mail_host_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_username',
+      'Логин почты',
+      'meta_yookassa_mail_username_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_password',
+      'Пароль почты',
+      'meta_yookassa_mail_password_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_port',
+      'Порт почты',
+      'meta_yookassa_mail_port_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_name',
+      'Название почты',
+      'meta_yookassa_mail_name_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_subject',
+      'Тема письма',
+      'meta_yookassa_mail_subject_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
+  add_settings_field(
+      'meta_yookassa_mail_address',
+      'Адрес электронной почты получателя',
+      'meta_yookassa_mail_address_callback',
+      'meta_yookassa_settings',
+      'meta_yookassa_settings_section_2',
+  );
 }
 
 function meta_yookassa_settings_section_callback() {
@@ -61,4 +144,43 @@ function meta_yookassa_enable_test_mode_callback() {
   ?>
   <input type="checkbox" name="meta_yookassa_enable_test_mode" <?php checked($enable_test_mode, 1); ?> value="1" />
   <?php
+}
+
+function meta_yookassa_settings_section_2_callback() {
+  echo '';
+}
+
+function meta_yookassa_mail_host_callback() {
+  $mail_host = esc_attr(get_option('meta_yookassa_mail_host'));
+  echo '<input type="text" name="meta_yookassa_mail_host" value="' . $mail_host . '" />';
+}
+
+function meta_yookassa_mail_username_callback() {
+  $mail_username = esc_attr(get_option('meta_yookassa_mail_username'));
+  echo '<input type="text" name="meta_yookassa_mail_username" value="' . $mail_username . '" />';
+}
+
+function meta_yookassa_mail_password_callback() {
+  $mail_password = esc_attr(get_option('meta_yookassa_mail_password'));
+  echo '<input type="password" name="meta_yookassa_mail_password" value="' . $mail_password . '" />';
+}
+
+function meta_yookassa_mail_port_callback() {
+  $mail_port = esc_attr(get_option('meta_yookassa_mail_port'));
+  echo '<input type="text" name="meta_yookassa_mail_port" value="' . $mail_port . '" />';
+}
+
+function meta_yookassa_mail_name_callback() {
+  $mail_name = esc_attr(get_option('meta_yookassa_mail_name'));
+  echo '<input type="text" name="meta_yookassa_mail_name" value="' . $mail_name . '" />';
+}
+
+function meta_yookassa_mail_subject_callback() {
+  $mail_subject = esc_attr(get_option('meta_yookassa_mail_subject'));
+  echo '<input type="text" name="meta_yookassa_mail_subject" value="' . $mail_subject . '" />';
+}
+
+function meta_yookassa_mail_address_callback() {
+  $mail_address = esc_attr(get_option('meta_yookassa_mail_address'));
+  echo '<input type="text" name="meta_yookassa_mail_address" value="' . $mail_address . '" />';
 }

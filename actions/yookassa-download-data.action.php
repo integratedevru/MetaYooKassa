@@ -1,9 +1,46 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+require __DIR__ . '/../dependencies/PHPMailer/src/Exception.php';
+require __DIR__ . '/../dependencies/PHPMailer/src/PHPMailer.php';
+require __DIR__ . '/../dependencies/PHPMailer/src/SMTP.php';
 
 function yookassa_download_data() {
   check_ajax_referer('yookassa_donwload_data_nonce', 'nonce');
+  send_message();
   generate_files();
   exit();
+}
+
+function send_message() {
+  $mail = new PHPMailer();
+
+  $mail->isSMTP();
+
+  $mail->Host = get_option('meta_yookassa_mail_host');
+  $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+  $mail->SMTPAuth = true;
+  $mail->SMTPAutoTLS = false;
+  $mail->Username = get_option('meta_yookassa_mail_username');
+  $mail->Password = get_option('meta_yookassa_mail_password');
+  $mail->Port = get_option('meta_yookassa_mail_port');
+
+  $mail->setFrom(get_option('meta_yookassa_mail_username'), get_option('meta_yookassa_mail_name'));
+  $mail->addAddress(get_option('meta_yookassa_mail_address'));
+  $mail->Subject = get_option('meta_yookassa_mail_subject');
+  $mail->Body = 'This is a test email sent from PHP using Google SMTP.';
+
+  $file_content = 'This is the content of the attached file.';
+  $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
+  file_put_contents($temp_file, $file_content);
+  $mail->addAttachment($temp_file, 'attachment.txt');
+
+  if ($mail->send()) {
+      echo 'Email sent successfully!';
+  } else {
+      echo 'Error: ' . $mail->ErrorInfo;
+  }
 }
 
 function generate_files() {
