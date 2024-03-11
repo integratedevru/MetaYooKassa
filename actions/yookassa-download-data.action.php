@@ -26,18 +26,27 @@ function send_message() {
   $mail->addAddress(get_option('meta_yookassa_mail_address'));
   $mail->Subject = get_option('meta_yookassa_mail_subject');
   $mail->Body = 'This is a test email sent from PHP using Google SMTP.';
+
   $data = get_success_payments_data();
   $payments_array = array();
   $counters_array = array();
-  if (array_key_exists('next_cursor', $data)) {
-    $next_cursor = $data['next_cursor'];
-  }
   $new_arrays = push_payments($data["items"], $payments_array, $counters_array);
   $payments_array = $new_arrays['payments'];
   $counters_array = $new_arrays['counters'];
-  echo count($payments_array) . ' payments added';
+
+  while (array_key_exists('next_cursor', $data)) {
+    $next_cursor = $data['next_cursor'];
+    $data = get_success_payments_data($next_cursor);
+    $new_arrays = push_payments($data["items"], $payments_array, $counters_array);
+    $payments_array = $new_arrays['payments'];
+    $counters_array = $new_arrays['counters'];
+  }
+
+  echo count($payments_array) . ' payments added' . "\n";
+  echo count($counters_array) . ' counters added' . "\n";
+
   foreach ($payments_array as $key => $value) {
-    $key_code = 123;
+    $key_code = get_region_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Payings.txt';
     $content = $value;
     $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
@@ -46,7 +55,7 @@ function send_message() {
     echo 'Added attachment: ' . $filename . "\n";
   }
   foreach ($counters_array as $key => $value) {
-    $key_code = 123;
+    $key_code = get_region_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Counters.txt';
     $content = $value;
     $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
@@ -59,6 +68,13 @@ function send_message() {
   } else {
       echo 'Error: ' . $mail->ErrorInfo;
   }
+}
+
+function get_region_key_code($region) {
+  global $wpdb;
+  $table_name = $wpdb->prefix . "metayookassa_payment_types";
+  $result = $wpdb->get_var("SELECT reester_number FROM $table_name WHERE region = '$region' LIMIT 1");
+  return $result;
 }
 
 function push_payments($payments_data, $payments_array, $counters_array) {

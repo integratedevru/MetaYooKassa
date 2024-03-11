@@ -1,6 +1,7 @@
 <?php
 /*
 Plugin Name: Meta YooKassa
+Plugin URI: https://github.com/integratedevru/MetaYooKassa
 Description: Form for paymeny via YooKassa and download data of successful payments.
 Version: 1.1
 Author: MetaSystems (for PKS)
