@@ -7,7 +7,8 @@ require __DIR__ . '/../dependencies/PHPMailer/src/PHPMailer.php';
 require __DIR__ . '/../dependencies/PHPMailer/src/SMTP.php';
 
 function yookassa_download_data() {
-  check_ajax_referer('yookassa_donwload_data_nonce', 'nonce');
+  error_log('yookassa_send_data method executed at ' . current_time('mysql'));
+  // check_ajax_referer('yookassa_donwload_data_nonce', 'nonce');
   send_message();
   exit();
 }
@@ -97,7 +98,7 @@ function push_payments($payments_data, $payments_array, $counters_array) {
     } else {
       $payments_array[$region] = $payments_string;
     }
-    if ($counters_string) {
+    if ($counters_string !== null) {
       if (array_key_exists($region, $counters_array)) {
         $counters_array[$region] .= $counters_string;
       } else {

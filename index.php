@@ -2,7 +2,7 @@
 /*
 Plugin Name: Meta YooKassa
 Plugin URI: https://github.com/integratedevru/MetaYooKassa
-Description: Form for paymeny via YooKassa and download data of successful payments.
+Description: Form for payments via YooKassa and download data of successful payments.
 Version: 1.1
 Author: MetaSystems (for PKS)
 */
@@ -28,9 +28,12 @@ include_once(plugin_dir_path(__FILE__) . 'actions/add-plugin-menu.action.php');
 add_action('admin_init', 'metayookassa_register_settings');
 include_once(plugin_dir_path(__FILE__) . 'actions/register-settings.action.php');
 
-add_action('wp_ajax_yookassa_download_data', 'yookassa_download_data');
-include_once(plugin_dir_path(__FILE__) . 'actions/yookassa-download-data.action.php');
+// add_action('wp_ajax_yookassa_download_data', 'yookassa_download_data');
+// include_once(plugin_dir_path(__FILE__) . 'actions/yookassa-download-data.action.php');
 
 add_action('wp_ajax_get_payment_data', 'get_payment_data');
 add_action('wp_ajax_nopriv_get_payment_data', 'get_payment_data');
 include_once(plugin_dir_path(__FILE__) . 'actions/get-payment-data.action.php');
+
+add_action('yookassa_send_data_event', 'yookassa_download_data');
+include_once(plugin_dir_path(__FILE__) . 'actions/yookassa-download-data.action.php');
