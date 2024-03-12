@@ -25,7 +25,7 @@ function send_message() {
   $mail->setFrom(get_option('meta_yookassa_mail_username'), get_option('meta_yookassa_mail_name'));
   $mail->addAddress(get_option('meta_yookassa_mail_address'));
   $mail->Subject = get_option('meta_yookassa_mail_subject');
-  $mail->Body = 'This is a test email sent from PHP using Google SMTP.';
+  $mail->Body = 'Реестр успешных платежей.';
 
   $data = get_success_payments_data();
   $payments_array = array();
@@ -57,7 +57,7 @@ function send_message() {
   foreach ($counters_array as $key => $value) {
     $key_code = get_region_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Counters.txt';
-    $content = $value;
+    $content = iconv('UTF-8', 'CP866', $value);
     $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
     file_put_contents($temp_file, $content);
     $mail->addAttachment($temp_file, $filename);
