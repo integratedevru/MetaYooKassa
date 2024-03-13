@@ -1,10 +1,4 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-require __DIR__ . '/../dependencies/PHPMailer/src/Exception.php';
-require __DIR__ . '/../dependencies/PHPMailer/src/PHPMailer.php';
-require __DIR__ . '/../dependencies/PHPMailer/src/SMTP.php';
 
 function yookassa_download_data() {
   error_log('yookassa_send_data method executed at ' . current_time('mysql'));
@@ -14,21 +8,8 @@ function yookassa_download_data() {
 }
 
 function send_message() {
-  $mail = new PHPMailer();
-  $mail->isSMTP();
-  $mail->Host = get_option('meta_yookassa_mail_host');
-  $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-  $mail->SMTPAuth = true;
-  $mail->SMTPAutoTLS = false;
-  $mail->Username = get_option('meta_yookassa_mail_username');
-  $mail->Password = get_option('meta_yookassa_mail_password');
-  $mail->Port = get_option('meta_yookassa_mail_port');
-  $mail->setFrom(get_option('meta_yookassa_mail_username'), get_option('meta_yookassa_mail_name'));
-  $mail->addAddress(get_option('meta_yookassa_mail_address'));
-  $mail->Subject = get_option('meta_yookassa_mail_subject');
-  $mail->Body = 'Реестр успешных платежей.';
-
   $data = get_success_payments_data();
+  $attachments = array();
   $payments_array = array();
   $counters_array = array();
   $new_arrays = push_payments($data["items"], $payments_array, $counters_array);
@@ -50,24 +31,33 @@ function send_message() {
     $key_code = get_region_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Payings.txt';
     $content = $value;
-    $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
+    $temp_file = sys_get_temp_dir() . '/' . $filename;
     file_put_contents($temp_file, $content);
-    $mail->addAttachment($temp_file, $filename);
+    // $mail->addAttachment($temp_file, $filename);
+    $attachments[] = $temp_file;
     echo 'Added attachment: ' . $filename . "\n";
   }
   foreach ($counters_array as $key => $value) {
     $key_code = get_region_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Counters.txt';
     $content = iconv('UTF-8', 'CP866', $value);
-    $temp_file = tempnam(sys_get_temp_dir(), 'attachment');
+    $temp_file = sys_get_temp_dir() . '/' . $filename;
     file_put_contents($temp_file, $content);
-    $mail->addAttachment($temp_file, $filename);
+    // $mail->addAttachment($temp_file, $filename);
+    $attachments[] = $temp_file;
     echo 'Added attachment: ' . $filename . "\n";
   }
-  if ($mail->send()) {
-      echo 'Email sent successfully!';
+
+  $to = get_option('meta_yookassa_mail_address');
+  $subject = get_option('meta_yookassa_mail_subject');
+  $message = 'Реестр успешных платежей за последние 24 часа.';
+
+  $sent = wp_mail($to, $subject, $message, '', $attachments);
+
+  if ($sent) {
+    echo 'Email sent successfully!';
   } else {
-      echo 'Error: ' . $mail->ErrorInfo;
+    echo 'Error: Email not sent.';
   }
 }
 
