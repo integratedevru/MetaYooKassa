@@ -11,7 +11,7 @@ function metayookassa_activation() {
 
     $time = time();
     wp_clear_scheduled_hook('yookassa_send_data_event');
-    wp_schedule_event(strtotime("+1 minutes"), 'daily', 'yookassa_send_data_event');
+    wp_schedule_event(strtotime($time, 0), 'daily', 'yookassa_send_data_event');
 }
 
 function get_payment_types_sql() {

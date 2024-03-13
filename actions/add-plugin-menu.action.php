@@ -37,7 +37,6 @@ function settings_page() {
               submit_button();
           ?>
       </form>
-      <button id="downloadDataButton" class="button">Скачать реестр успешных платежей (.csv)</button>
       <script>
         document.getElementById('downloadDataButton').addEventListener('click', downloadData);
         function downloadData() {
