@@ -50,7 +50,7 @@ function send_message() {
 
   $to = get_option('meta_yookassa_mail_address');
   $subject = get_option('meta_yookassa_mail_subject');
-  $message = 'Реестр успешных платежей за последние 24 часа.';
+  $message = 'Реестр успешных платежей за последние сукти.';
 
   $sent = wp_mail($to, $subject, $message, '', $attachments);
 
