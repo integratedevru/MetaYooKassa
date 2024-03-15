@@ -5,7 +5,7 @@ $paymentTypesTable = $wpdb->prefix . 'metayookassa_payment_types';
 $invoicesTable = $wpdb->prefix . 'metayookassa_invoice';
 $counterValuesTable = $wpdb->prefix . 'metayookassa_counter_value';
 
-function findRegion($reesterNumber) {
+function findDistrict($reesterNumber) {
   global $wpdb;
   $paymentTypesTable = $wpdb->prefix . 'metayookassa_payment_types';
 
@@ -13,6 +13,14 @@ function findRegion($reesterNumber) {
   $result = $wpdb->get_row(
     "SELECT region FROM $paymentTypesTable WHERE reester_number LIKE '$startsWith%' LIMIT 1");
   return $result->region;
+}
+
+function isExistsTypeOfPaymentInRegion($type_of_payment, $region) {
+  global $wpdb;
+  $paymentTypesTable = $wpdb->prefix . 'metayookassa_payment_types';
+  $result = $wpdb->get_var(
+    "SELECT id FROM $paymentTypesTable WHERE type_of_payment = '$type_of_payment' AND region = '$region' LIMIT 1");
+  return !empty($result);
 }
 
 function truncateAll() {
@@ -39,78 +47,86 @@ if (isset($_POST['button_import'])) {
       $countersInserted = 0;
       $csvFile = fopen($file_tmp, 'r');
       $reesterNumber = explode('.', $file_name)[0];
-      $region = findRegion($reesterNumber);
-      while (($csvData = fgetcsv($csvFile, 1000, ';')) !== FALSE) {
-        $address = iconv('windows-1251', 'utf-8', $csvData[3]);
-        $invoiceNumber = trim($csvData[4]);
-        $amount = $csvData[5];
-        $unifiedNumber = $csvData[6];
-        $counters = explode(':', $csvData[7]);
-        for ($i = 0; $i < count($counters); $i += 3) {
-          if ($counters[$i] == '[!]') {
-            $typeOfPayment = $counters[$i+1];
-          }
-        }
-        $found = $wpdb->get_row(
-          "SELECT id 
-          FROM $invoicesTable 
-          WHERE region = '$region'
-            AND type_of_payment = '$typeOfPayment' 
-            AND invoice_number = '$invoiceNumber'
-          LIMIT 1"
-        );
-        if ($found) {
-          $wpdb->delete(
-            $counterValuesTable,
-            array(
-              'invoice_id' => $found->id
-            )
-          );
-          $wpdb->delete(
-            $invoicesTable,
-            array(
-              'id' => $found->id
-            )
-          );
-        }
-        if (!empty($reesterNumber) && !empty($address) && !empty($invoiceNumber) && !empty($amount)) {
-          $wpdb->insert(
-            $invoicesTable,
-            array(
-              'reester_number' => sanitize_text_field($reesterNumber),
-              'address' => sanitize_text_field($address),
-              'region' => sanitize_text_field($region),
-              'invoice_number' => sanitize_text_field($invoiceNumber),
-              'amount' => sanitize_text_field($amount),
-              'unified_number' => sanitize_text_field($unifiedNumber),
-              'type_of_payment' => $typeOfPayment,
-            )
-          );
-          $insertId = $wpdb->insert_id;
+      $district = findDistrict($reesterNumber);
+      if (empty($district)) {
+        echo '<span style="color: red;"><b>Идентификатор услуги в имени файла (' . $reesterNumber .  ' или ' . explode('_', $reesterNumber)[0] . ') не соответствует загруженным в базу данных (номер услуги Сбербанка)</b></span><br>';
+      } else {
+        while (($csvData = fgetcsv($csvFile, 1000, ';')) !== FALSE) {
+          $address = iconv('windows-1251', 'utf-8', $csvData[3]);
+          $invoiceNumber = trim($csvData[4]);
+          $amount = $csvData[5];
+          $unifiedNumber = $csvData[6];
+          $counters = explode(':', $csvData[7]);
           for ($i = 0; $i < count($counters); $i += 3) {
-            if ($counters[$i] != '[!]') {
-              $serviceName = iconv('windows-1251', 'utf-8', $counters[$i]);
-              $meterNumber = iconv('windows-1251', 'utf-8', $counters[$i+1]);
-              $oldReading = $counters[$i+2];
-              $wpdb->insert(
-                $counterValuesTable,
-                array(
-                  'invoice_id' => $insertId,
-                  'service_name' => $serviceName,
-                  'meter_number' => $meterNumber,
-                  'old_reading' => $oldReading,
-                )
-              );
-              $countersInserted++;
-            } else {
-              ++$i;
+            if ($counters[$i] == '[!]') {
+              $typeOfPayment = $counters[$i+1];
             }
           }
-          $totalInserted++;
+          if (!isExistsTypeOfPaymentInRegion($typeOfPayment, $district)) {
+            echo '<span style="color: red;"><b>Тип платежа ' . $typeOfPayment . ' в районе ' . $district . ' не найден</b></span><br>';
+            break;
+          }
+          $found = $wpdb->get_row(
+            "SELECT id 
+            FROM $invoicesTable 
+            WHERE region = '$district'
+              AND type_of_payment = '$typeOfPayment' 
+              AND invoice_number = '$invoiceNumber'
+            LIMIT 1"
+          );
+          if ($found) {
+            $wpdb->delete(
+              $counterValuesTable,
+              array(
+                'invoice_id' => $found->id
+              )
+            );
+            $wpdb->delete(
+              $invoicesTable,
+              array(
+                'id' => $found->id
+              )
+            );
+          }
+          if (!empty($reesterNumber) && !empty($address) && !empty($invoiceNumber) && !empty($amount)) {
+            $wpdb->insert(
+              $invoicesTable,
+              array(
+                'reester_number' => sanitize_text_field($reesterNumber),
+                'address' => sanitize_text_field($address),
+                'region' => sanitize_text_field($district),
+                'invoice_number' => sanitize_text_field($invoiceNumber),
+                'amount' => sanitize_text_field($amount),
+                'unified_number' => sanitize_text_field($unifiedNumber),
+                'type_of_payment' => $typeOfPayment,
+              )
+            );
+            $insertId = $wpdb->insert_id;
+            for ($i = 0; $i < count($counters); $i += 3) {
+              if ($counters[$i] != '[!]') {
+                $serviceName = iconv('windows-1251', 'utf-8', $counters[$i]);
+                $meterNumber = iconv('windows-1251', 'utf-8', $counters[$i+1]);
+                $oldReading = $counters[$i+2];
+                $wpdb->insert(
+                  $counterValuesTable,
+                  array(
+                    'invoice_id' => $insertId,
+                    'service_name' => $serviceName,
+                    'meter_number' => $meterNumber,
+                    'old_reading' => $oldReading,
+                  )
+                );
+                $countersInserted++;
+              } else {
+                ++$i;
+              }
+            }
+            $totalInserted++;
+          }
         }
+        fclose($csvFile);
+        echo 'Квитанций добавлено/обновлено: ' . $totalInserted . '. Показателей добавлено/обновлено: ' . $countersInserted . '. Район: ' . $district . '<br>';
       }
-      fclose($csvFile);
-      echo 'Квитанций добавлено/обновлено: ' . $totalInserted . '. Показателей добавлено/обновлено: ' . $countersInserted . '. Район: ' . $region . '<br>';
     }
   }
 }

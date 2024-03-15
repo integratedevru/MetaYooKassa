@@ -27,17 +27,17 @@ if (isset($_POST['button_import'])) {
     $csvFile = fopen($_FILES['import_file']['tmp_name'], 'r');
     $wpdb->query("TRUNCATE TABLE $tableName;");
     while (($csvData = fgetcsv($csvFile, 1000, ';')) !== FALSE) {
-      $region = empty($csvData[0]) ? $region : parseRegion($csvData[1]);
+      $district = empty($csvData[0]) ? $district : parseRegion($csvData[1]);
       $dataLen = count($csvData);
       $extractedData = parseReesterAndPayment($csvData[2]);
       $reesterNumber = $extractedData['reesterNumber'];
       $typeOfPayment = $extractedData['typeOfPayment'];
       $receiptName = trim($csvData[3], "! ");
-      if (!empty($region) && !empty($reesterNumber) && !empty($typeOfPayment) && !empty($receiptName)) {
+      if (!empty($district) && !empty($reesterNumber) && !empty($typeOfPayment) && !empty($receiptName)) {
         $wpdb->insert(
             $tableName,
             array(
-                'region' => sanitize_text_field($region),
+                'region' => sanitize_text_field($district),
                 'reester_number' => sanitize_text_field($reesterNumber),
                 'type_of_payment' => sanitize_text_field($typeOfPayment),
                 'receipt_name' => sanitize_text_field($receiptName)

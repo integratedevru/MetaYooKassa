@@ -28,7 +28,7 @@ function send_message() {
   echo count($counters_array) . ' counters added' . "\n";
 
   foreach ($payments_array as $key => $value) {
-    $key_code = get_region_key_code($key);
+    $key_code = get_district_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Payings.txt';
     $content = $value;
     $temp_file = sys_get_temp_dir() . '/' . $filename;
@@ -38,7 +38,7 @@ function send_message() {
     echo 'Added attachment: ' . $filename . "\n";
   }
   foreach ($counters_array as $key => $value) {
-    $key_code = get_region_key_code($key);
+    $key_code = get_district_key_code($key);
     $filename = $key_code . '_' . date('y_m_d') . '_Inary_Counters.txt';
     $content = iconv('UTF-8', 'CP866', $value);
     $temp_file = sys_get_temp_dir() . '/' . $filename;
@@ -61,21 +61,21 @@ function send_message() {
   }
 }
 
-function get_region_key_code($region) {
+function get_district_key_code($district) {
   global $wpdb;
   $table_name = $wpdb->prefix . "metayookassa_payment_types";
-  $result = $wpdb->get_var("SELECT reester_number FROM $table_name WHERE region = '$region' LIMIT 1");
+  $result = $wpdb->get_var("SELECT reester_number FROM $table_name WHERE region = '$district' LIMIT 1");
   return $result;
 }
 
 function push_payments($payments_data, $payments_array, $counters_array) {
   foreach ($payments_data as $payment) {
-    $region = $payment['metadata']['district'];
+    $district = $payment['metadata']['district'];
     $type_of_payment = $payment['metadata']['type_of_payment'];
     $account_number = $payment['metadata']['account_number'];
     $value = $payment['amount']['value'];
     $counters = explode(';', $payment['metadata']['counters']);
-    $payments_string = ";$type_of_payment;$region;$account_number;$value;";
+    $payments_string = ";$type_of_payment;$district;$account_number;$value;";
     $counters_string = null;
     if (count($counters) > 0) {
       $counters_string = "";
@@ -83,16 +83,16 @@ function push_payments($payments_data, $payments_array, $counters_array) {
         $counters_string .= "$account_number@$counter@@@@@\n";
       }
     }
-    if (array_key_exists($region, $payments_array)) {
-      $payments_array[$region] .= "\n" . $payments_string;
+    if (array_key_exists($district, $payments_array)) {
+      $payments_array[$district] .= "\n" . $payments_string;
     } else {
-      $payments_array[$region] = $payments_string;
+      $payments_array[$district] = $payments_string;
     }
     if ($counters_string !== null) {
-      if (array_key_exists($region, $counters_array)) {
-        $counters_array[$region] .= $counters_string;
+      if (array_key_exists($district, $counters_array)) {
+        $counters_array[$district] .= $counters_string;
       } else {
-        $counters_array[$region] = $counters_string;
+        $counters_array[$district] = $counters_string;
       } 
     }
   }
