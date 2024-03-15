@@ -49,6 +49,19 @@ function form_html() {
     #meta-yookassa-form .form-submit:hover {
       background-color: #45a049;
     }
+    #meta-yookassa-form .form-cancel {
+      background-color: #AD4F4C;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-weight: 900;
+    }
+    #meta-yookassa-form .form-cancel:hover {
+      background-color: #9E4C45;
+    }
   </style>
 
   <form id="meta-yookassa-form" method="post">
@@ -73,10 +86,19 @@ function form_html() {
       <label class="form-label" for="amount">Сумма платежа (руб.):</label>
       <input class="form-input" type="text" id="amount" name="amount">
       <input class="form-submit" type="submit" value="Оплатить с помощью ЮKassa и передать показатели счётчиков">
+      <input class="form-cancel" type="button" id="back-button" onclick="switchToFirstPart()" value="Назад">
     </div>
   </form>
 
   <script>
+    function switchToFirstPart() {
+      document.getElementById('switch-button').classList.remove('hidden');
+      var div = document.getElementById('second-part');
+      div.classList.add('hidden');
+      document.getElementById('district').removeAttribute('readonly');
+      document.getElementById('type_of_payment').removeAttribute('readonly');
+      document.getElementById('account_number').removeAttribute('readonly');
+    }
     function switchToSecondPart() {
       document.getElementById('switch-button').classList.add('hidden');
       var region = document.getElementsByName('district')[0].value;
