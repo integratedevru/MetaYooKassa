@@ -84,20 +84,39 @@ function form_html() {
       <p>Показатели счётчиков:</p>
       <table><tbody id="counters"></tbody></table>
       <label class="form-label" for="amount">Сумма платежа (руб.):</label>
-      <input class="form-input" type="text" id="amount" name="amount">
-      <input class="form-submit" type="submit" value="Оплатить с помощью ЮKassa и передать показатели счётчиков">
-      <input class="form-cancel" type="button" id="back-button" onclick="switchToFirstPart()" value="Назад">
+      <input class="form-input" type="text" id="amount" name="amount" oninput="calculateCommission()">
+      <br>
+      <p>Коммиссия ЮКассы (0,9%): <span id="commission"></span></p>
+      <p><b>Итого к оплате: <span id="total"></span></b></p>
+      <button class="form-submit" type="button" id="next-button" onclick="switchToThirdPart()">Оплатить с помощью ЮКассы и передать показания счётчиков</button>
+      <input class="form-cancel" style="margin-top: unset;" type="button" id="back-button" onclick="switchToFirstPart()" value="Назад">
+    </div>
+    <div id="third-part" class="hidden">
+      <p>Подтверждаете корректность введённых данных?</p>
+      <input class="form-submit" type="submit" value="Да">
+      <input class="form-cancel" type="button" id="second-back-button" onclick="switchToFirstPart()" value="Нет">
     </div>
   </form>
 
   <script>
+    function calculateCommission() {
+        var amount = document.getElementById("amount").value;
+        var total = (parseFloat(amount) / (1 - (0.009))).toFixed(2);
+        var commission = (parseFloat(total) - parseFloat(amount)).toFixed(2);
+        document.getElementById("commission").innerText = commission;
+        document.getElementById("total").innerText = total;
+    }
     function switchToFirstPart() {
       document.getElementById('switch-button').classList.remove('hidden');
-      var div = document.getElementById('second-part');
-      div.classList.add('hidden');
+      document.getElementById('second-part').classList.add('hidden');
+      document.getElementById('third-part').classList.add('hidden');
       document.getElementById('district').removeAttribute('readonly');
       document.getElementById('type_of_payment').removeAttribute('readonly');
       document.getElementById('account_number').removeAttribute('readonly');
+    }
+    function switchToThirdPart() {
+      document.getElementById('switch-button').classList.add('hidden');
+      document.getElementById('third-part').classList.remove('hidden');
     }
     function switchToSecondPart() {
       document.getElementById('switch-button').classList.add('hidden');
@@ -131,6 +150,7 @@ function form_html() {
           div.classList.remove('hidden');
           document.getElementById('address').value = data.address;
           document.getElementById('amount').value = data.amount;
+          calculateCommission();
           var tbody = document.getElementById('counters');
           tbody.innerHTML = '';
           if (data.counters.length === 0) {

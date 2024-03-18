@@ -74,8 +74,9 @@ function push_payments($payments_data, $payments_array, $counters_array) {
     $type_of_payment = $payment['metadata']['type_of_payment'];
     $account_number = $payment['metadata']['account_number'];
     $value = $payment['amount']['value'];
+    $incomeValue = $payment['income_amount']['value'];
     $counters = explode(';', $payment['metadata']['counters']);
-    $payments_string = ";$type_of_payment;$district;$account_number;$value;";
+    $payments_string = ";$type_of_payment;$district;$account_number;$incomeValue;";
     $counters_string = null;
     if (count($counters) > 0) {
       $counters_string = "";
@@ -107,7 +108,7 @@ function get_success_payments_data($cursor = null) {
   if ($cursor) {
     $api_url .= '&cursor=' . $cursor;
   }
-  $api_url .= '&created_at.gte=' . date('Y-m-d\TH:i:s.000\Z', strtotime('-1 day'));
+  // $api_url .= '&created_at.gte=' . date('Y-m-d\TH:i:s.000\Z', strtotime('-1 day'));
   echo $api_url . "\n";
   $api_key = get_option('meta_yookassa_shop_id') . ':' . get_option('meta_yookassa_secret_key');
   $curl_options = array(
