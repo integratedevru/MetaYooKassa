@@ -9,9 +9,9 @@ function metayookassa_activation() {
     dbDelta($invoice_sql);
     dbDelta($counter_value_sql);
 
-    $current_day_1am = strtotime('today 1:00 AM');
+    $tomorrow_at_1am = strtotime('tomorrow 1:00 AM');
     wp_clear_scheduled_hook('yookassa_send_data_event');
-    wp_schedule_event($current_day_1am, 'daily', 'yookassa_send_data_event');
+    wp_schedule_event($tomorrow_at_1am, 'daily', 'yookassa_send_data_event');
 }
 
 function get_payment_types_sql() {
