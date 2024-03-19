@@ -8,7 +8,7 @@ function form_html() {
 
   ob_start(); ?>
   <style>
-    .hidden {
+    #meta-yookassa-form .hidden {
       display: none;
     }
     #meta-yookassa-form {
@@ -37,6 +37,7 @@ function form_html() {
       pointer-events: none;
     }
     #meta-yookassa-form .form-submit {
+      min-width: 140px;
       background-color: #4caf50;
       color: white;
       cursor: pointer;
@@ -49,7 +50,13 @@ function form_html() {
     #meta-yookassa-form .form-submit:hover {
       background-color: #45a049;
     }
+    #meta-yookassa-form .form-submit:disabled {
+      background-color: #EEEEEE;
+      color: #ABABAB;
+      cursor: default;
+    }
     #meta-yookassa-form .form-cancel {
+      min-width: 140px;
       background-color: #AD4F4C;
       color: white;
       cursor: pointer;
@@ -61,6 +68,20 @@ function form_html() {
     }
     #meta-yookassa-form .form-cancel:hover {
       background-color: #9E4C45;
+    }
+    #meta-yookassa-form .accept-popup {
+      position: fixed;
+      background-color: ghostwhite;
+      padding: 20px;
+      top: 50%;
+      left: 50%;
+      border-radius: 20px;
+      border: black 2px solid;
+      transform: translateX(-50%) translateY(-50%);
+    }
+    #meta-yookassa-form .button-group {
+      display: flex;
+      justify-content: space-between;
     }
   </style>
 
@@ -91,17 +112,23 @@ function form_html() {
       <button class="form-submit" type="button" id="next-button" onclick="switchToThirdPart()">Оплатить с помощью ЮКассы и передать показания счётчиков</button>
       <input class="form-cancel" style="margin-top: unset;" type="button" id="back-button" onclick="switchToFirstPart()" value="Назад">
     </div>
-    <div id="third-part" class="hidden">
-      <p>Подтверждаете корректность введённых данных?</p>
-      <input class="form-submit" type="submit" value="Да">
-      <input class="form-cancel" type="button" id="second-back-button" onclick="switchToFirstPart()" value="Нет">
+    <div id="third-part" class="hidden accept-popup">
+      <p><b>Подтверждаете корректность введённых данных?</b></p>
+      <div class="button-group">
+        <input class="form-submit" type="submit" value="Да">
+        <input class="form-cancel" type="button" id="second-back-button" onclick="switchToFirstPart()" value="Нет">
+      </div>
     </div>
   </form>
 
   <script>
     function calculateCommission() {
-        var amount = document.getElementById("amount").value;
-        var total = (parseFloat(amount) / (1 - (0.009))).toFixed(2);
+        var amount = isNaN(document.getElementById("amount").value)
+          ? 0
+          : document.getElementById("amount").value;
+        var total = isNaN(document.getElementById("amount").value)
+          ? 0.01
+          : (parseFloat(amount) / (1 - (0.009))).toFixed(2);
         var commission = (parseFloat(total) - parseFloat(amount)).toFixed(2);
         document.getElementById("commission").innerText = commission;
         document.getElementById("total").innerText = total;
@@ -113,10 +140,14 @@ function form_html() {
       document.getElementById('district').removeAttribute('readonly');
       document.getElementById('type_of_payment').removeAttribute('readonly');
       document.getElementById('account_number').removeAttribute('readonly');
+      document.getElementById('next-button').removeAttribute('disabled');
+      document.getElementById('back-button').classList.remove('hidden');
     }
     function switchToThirdPart() {
       document.getElementById('switch-button').classList.add('hidden');
       document.getElementById('third-part').classList.remove('hidden');
+      document.getElementById('next-button').setAttribute('disabled', 'disabled');
+      document.getElementById('back-button').classList.add('hidden');
     }
     function switchToSecondPart() {
       document.getElementById('switch-button').classList.add('hidden');
@@ -146,8 +177,7 @@ function form_html() {
           document.getElementById('district').setAttribute('readonly', 'readonly');
           document.getElementById('type_of_payment').setAttribute('readonly', 'readonly');
           document.getElementById('account_number').setAttribute('readonly', 'readonly');
-          var div = document.getElementById('second-part');
-          div.classList.remove('hidden');
+          document.getElementById('second-part').classList.remove('hidden');
           document.getElementById('address').value = data.address;
           document.getElementById('amount').value = data.amount;
           calculateCommission();
