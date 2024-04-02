@@ -107,8 +107,8 @@ function form_html() {
       <label class="form-label" for="amount">Сумма платежа (руб.):</label>
       <input class="form-input" type="text" id="amount" name="amount" oninput="calculateCommission()">
       <br>
-      <p>Коммиссия ЮКассы (0,9%): <span id="commission"></span></p>
-      <p><b>Итого к оплате: <span id="total"></span></b></p>
+      <!-- <p>Коммиссия ЮКассы (0,9%): <span id="commission"></span></p>
+      <p><b>Итого к оплате: <span id="total"></span></b></p> -->
       <button class="form-submit" type="button" id="next-button" onclick="switchToThirdPart()">Оплатить с помощью ЮКассы и передать показания счётчиков</button>
       <input class="form-cancel" style="margin-top: unset;" type="button" id="back-button" onclick="switchToFirstPart()" value="Назад">
     </div>

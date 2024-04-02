@@ -11,7 +11,8 @@ function handle_form_submission() {
     $district = sanitize_text_field($_POST['district']);
     $account_number = sanitize_text_field($_POST['account_number']);
     $amount = sanitize_text_field($_POST['amount']);
-    $desired = ceil($amount / (1 - (0.009)) * 100) / 100;
+    // $desired = ceil($amount / (1 - (0.009)) * 100) / 100;
+    $desired = $amount;
 
     $counters = array();
 
