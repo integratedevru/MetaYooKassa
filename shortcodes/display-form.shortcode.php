@@ -123,15 +123,15 @@ function form_html() {
 
   <script>
     function calculateCommission() {
-        var amount = isNaN(document.getElementById("amount").value)
-          ? 0
-          : document.getElementById("amount").value;
-        var total = isNaN(document.getElementById("amount").value)
-          ? 0.01
-          : (parseFloat(amount) / (1 - (0.009))).toFixed(2);
-        var commission = (parseFloat(total) - parseFloat(amount)).toFixed(2);
-        document.getElementById("commission").innerText = commission;
-        document.getElementById("total").innerText = total;
+        // var amount = isNaN(document.getElementById("amount").value)
+        //   ? 0
+        //   : document.getElementById("amount").value;
+        // var total = isNaN(document.getElementById("amount").value)
+        //   ? 0.01
+        //   : (parseFloat(amount) / (1 - (0.009))).toFixed(2);
+        // var commission = (parseFloat(total) - parseFloat(amount)).toFixed(2);
+        // document.getElementById("commission").innerText = commission;
+        // document.getElementById("total").innerText = total;
     }
     function switchToFirstPart() {
       document.getElementById('switch-button').classList.remove('hidden');
