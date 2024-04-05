@@ -38,3 +38,12 @@ include_once(plugin_dir_path(__FILE__) . 'actions/get-payment-data.action.php');
 
 add_action('yookassa_send_data_event', 'yookassa_download_data');
 include_once(plugin_dir_path(__FILE__) . 'actions/yookassa-download-data.action.php');
+
+add_filter('cron_schedules', 'cron_add_meta_daily');
+function cron_add_meta_five_min($schedules) {
+	$schedules['meta_daily'] = array(
+		'interval' => 60 * 60 * 24,
+		'display' => 'Ежедневно'
+	);
+	return $schedules;
+}
