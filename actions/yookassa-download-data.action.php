@@ -81,6 +81,7 @@ function push_payments($payments_data, $payments_array, $counters_array) {
     if (count($counters) > 0) {
       $counters_string = "";
       foreach ($counters as $counter) {
+        if ($counter === '') continue;
         $counters_string .= "$account_number@$counter@@@@@\n";
       }
     }
@@ -89,7 +90,7 @@ function push_payments($payments_data, $payments_array, $counters_array) {
     } else {
       $payments_array[$district] = $payments_string;
     }
-    if ($counters_string !== null) {
+    if ($counters_string !== null && $counters_string !== '') {
       if (array_key_exists($district, $counters_array)) {
         $counters_array[$district] .= $counters_string;
       } else {
