@@ -108,7 +108,7 @@ function get_success_payments_data($cursor = null) {
   if ($cursor) {
     $api_url .= '&cursor=' . $cursor;
   }
-  // $api_url .= '&created_at.gte=' . date('Y-m-d\TH:i:s.000\Z', strtotime('-1 day'));
+  $api_url .= '&created_at.gte=' . date('Y-m-d\TH:i:s.000\Z', strtotime('-1 day'));
   echo $api_url . "\n";
   $api_key = get_option('meta_yookassa_shop_id') . ':' . get_option('meta_yookassa_secret_key');
   $curl_options = array(
