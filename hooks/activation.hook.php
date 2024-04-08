@@ -9,7 +9,7 @@ function metayookassa_activation() {
     dbDelta($invoice_sql);
     dbDelta($counter_value_sql);
 
-    $tomorrow_at_1am = strtotime('tomorrow 1:00 AM');
+    $tomorrow_at_1am = strtotime('tomorrow 1:00 AM - 3 hours');
     wp_clear_scheduled_hook('yookassa_send_data_event');
     wp_schedule_event($tomorrow_at_1am, 'meta_daily', 'yookassa_send_data_event');
 }
