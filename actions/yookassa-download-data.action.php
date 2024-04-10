@@ -76,7 +76,7 @@ function push_payments($payments_data, $payments_array, $counters_array) {
     $value = $payment['amount']['value'];
     $incomeValue = $payment['income_amount']['value'];
     $counters = explode(';', $payment['metadata']['counters']);
-    $payments_string = ";$type_of_payment;$district;$account_number;$incomeValue;";
+    $payments_string = ";$type_of_payment;$account_number;$incomeValue;";
     $counters_string = null;
     if (count($counters) > 0) {
       $counters_string = "";
