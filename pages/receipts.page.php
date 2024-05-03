@@ -40,6 +40,7 @@ if (isset($_POST['button_import'])) {
     $file_type = $_FILES['import_file']['type'][$key];
     $file_error = $_FILES['import_file']['error'][$key];
     $region = sanitize_text_field($_POST['region']);
+    $region = $region === 'null' ? null : $region;
     $extension = pathinfo($file_name, PATHINFO_EXTENSION);
     if (!empty($file_name) && ($extension == 'csv' || $extension == 'txt')) {
       echo '<div class="notice notice-info is-dismissible"><p>Файл импортирован: ' . $file_name . '</p></div>';
