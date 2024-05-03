@@ -17,9 +17,10 @@ if ($last) {
       text-align: right;
     }
   </style>
+
   <h2>Редактирование типа платежа</h2>
-  <form method="post">
-    <table>
+  <form class="form-table" method="post">
+    <table class="">
       <td><input type="text" hidden name="edit_id" value="<?php echo $edit_id; ?>"></td>
       <tbody>
         <tr>
@@ -48,7 +49,7 @@ if ($last) {
         </tr>
         <tr>
           <td></td>
-          <td><input type="submit" name="button_update" value="Обновить"> <a href="?page=meta_yookassa_payment_types">Вернуться</a></td>
+          <td><input type="submit" class="button button-primary" name="button_update" value="Обновить"> <a class="button button-secondary" href="?page=meta_yookassa_payment_types">Вернуться</a></td>
         </tr>
       </tbody>
     </table>

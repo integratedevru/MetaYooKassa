@@ -17,8 +17,8 @@ $new_is_manual = 1;
   }
 </style>
 <h2>Редактирование типа платежа</h2>
-<form method="post">
-  <table>
+<form class="form-table" method="post">
+  <table class="">
     <tbody>
       <tr>
         <th class="table_header" scope="row">ID</th>
@@ -46,7 +46,7 @@ $new_is_manual = 1;
       </tr>
       <tr>
         <td></td>
-        <td><input type="submit" name="button_create" value="Создать"> <a href="?page=meta_yookassa_payment_types">Отменить</a></td>
+        <td><input type="submit" name="button_create" value="Создать" class="button button-primary"> <a href="?page=meta_yookassa_payment_types" class="button button-secondary">Отменить</a></td>
       </tr>
     </tbody>
   </table>

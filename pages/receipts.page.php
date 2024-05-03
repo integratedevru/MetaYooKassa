@@ -39,17 +39,17 @@ if (isset($_POST['button_import'])) {
     $file_tmp = $_FILES['import_file']['tmp_name'][$key];
     $file_type = $_FILES['import_file']['type'][$key];
     $file_error = $_FILES['import_file']['error'][$key];
+    $region = sanitize_text_field($_POST['region']);
     $extension = pathinfo($file_name, PATHINFO_EXTENSION);
-    echo 'Файл импортирован: ' . $file_name . '<br>';
     if (!empty($file_name) && ($extension == 'csv' || $extension == 'txt')) {
-      echo 'Файл в формате: ' . $file_name . '<br>';
+      echo '<div class="notice notice-info is-dismissible"><p>Файл импортирован: ' . $file_name . '</p></div>';
       $totalInserted = 0;
       $countersInserted = 0;
       $csvFile = fopen($file_tmp, 'r');
       $reesterNumber = explode('.', $file_name)[0];
-      $district = findDistrict($reesterNumber);
+      $district = $region ? $region : findDistrict($reesterNumber);
       if (empty($district)) {
-        echo '<span style="color: red;"><b>Идентификатор услуги в имени файла (' . $reesterNumber .  ' или ' . explode('_', $reesterNumber)[0] . ') не соответствует загруженным в базу данных (номер услуги Сбербанка)</b></span><br>';
+        echo '<div class="notice notice-error notice-alt"><p><b>Идентификатор услуги в имени файла (' . $reesterNumber .  ' или ' . explode('_', $reesterNumber)[0] . ') не соответствует загруженным в базу данных (номер услуги Сбербанка)</b></p></div>';
       } else {
         while (($csvData = fgetcsv($csvFile, 1000, ';')) !== FALSE) {
           $address = iconv('windows-1251', 'utf-8', $csvData[3]);
@@ -63,7 +63,7 @@ if (isset($_POST['button_import'])) {
             }
           }
           if (!isExistsTypeOfPaymentInRegion($typeOfPayment, $district)) {
-            echo '<span style="color: red;"><b>Тип платежа ' . $typeOfPayment . ' в районе ' . $district . ' не найден</b></span><br>';
+            echo '<div class="notice notice-error notice-alt"><p><b>Тип платежа ' . $typeOfPayment . ' в "' . $district . '" не найден</b></p></div>';
             break;
           }
           $found = $wpdb->get_row(
@@ -125,27 +125,54 @@ if (isset($_POST['button_import'])) {
           }
         }
         fclose($csvFile);
-        echo 'Квитанций добавлено/обновлено: ' . $totalInserted . '. Показателей добавлено/обновлено: ' . $countersInserted . '. Район: ' . $district . '<br>';
+        echo '<div class="notice notice-success is-dismissible">
+                <p><b>' . $district . '</b></p>
+                <p>Квитанций добавлено/обновлено: ' . $totalInserted . '</p>
+                <p>Показателей добавлено/обновлено: ' . $countersInserted . '</p>
+              </div>';
       }
     }
   }
 }
 ?>
 
+<style> 
+  .numeric-cell {
+    text-align: right;
+  }
+  .meta-table {
+    width: auto;
+  }
+  .meta-table td,
+  .meta-table th {
+    padding: 1px 2px;
+  }
+</style>
+
 <h2>Квитанции</h2>
 
-<form method="post" enctype="multipart/form-data">
+<form class="form-table" method="post" enctype="multipart/form-data">
+  <select name="region">
+    <option value="null" selected><i>Автоматическое определение</i></option>
+    <?php
+    $regions = $wpdb->get_results("SELECT DISTINCT region FROM wp_metayookassa_payment_types ORDER BY region");
+    foreach ($regions as $region) {
+      echo '<option value="' . $region->region . '">' . $region->region . '</option>';
+    }
+    ?>
+  </select>
   <input type="file" name="import_file[]" accept=".csv,.txt" multiple>
-  <input type="submit" name="button_import" value="Импортировать (.csv или .txt)">
+  <input class="button button-primary" type="submit" name="button_import" value="Импортировать (.csv или .txt)">
 </form>
+<br />
 
-<table>
+<table class="wp-list-table widefat fixed striped meta-table">
   <thead>
     <tr>
-      <th>Район</th>
-      <th>Тип платежа</th>
-      <th>Квитанции</th>
-      <th>Показания счётчиков</th>
+      <th><b>Район</b></th>
+      <th><b>Тип платежа</b></th>
+      <th><b>Квитанции</b></th>
+      <th><b>Показания счётчиков</b></th>
     </tr>
   </thead>
   <tbody>
@@ -162,9 +189,9 @@ if (isset($_POST['button_import'])) {
     foreach ($stats as $stat) {
       echo '<tr>';
       echo '<td>' . $stat->region . '</td>';
-      echo '<td>' . $stat->type_of_payment . '</td>';
-      echo '<td>' . $stat->invoices . '</td>';
-      echo '<td>' . $stat->counters . '</td>';
+      echo '<td class="numeric-cell">' . $stat->type_of_payment . '</td>';
+      echo '<td class="numeric-cell">' . $stat->invoices . '</td>';
+      echo '<td class="numeric-cell">' . $stat->counters . '</td>';
       echo '</tr>';
     }
     ?>

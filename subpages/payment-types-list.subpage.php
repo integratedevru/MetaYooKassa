@@ -8,27 +8,35 @@ $tableName = $wpdb->prefix . 'metayookassa_payment_types';
   .numeric-cell {
     text-align: right;
   }
+  .meta-table {
+    width: auto;
+  }
+  .meta-table td,
+  .meta-table th {
+    padding: 1px 2px;
+  }
 </style>
 
 <h2>Все типы платежей</h2>
 
-<form method="post" enctype="multipart/form-data">
-  <input type="file" name="import_file" accept=".csv">
-  <input type="submit" name="button_import" value="Импортировать (.csv или .txt)">
+<form class="form-table" method="post" enctype="multipart/form-data">
+  <input type="file" name="import_file" accept=".csv,.txt">
+  <input class="button button-primary" type="submit" name="button_import" value="Импортировать (.csv или .txt)">
 </form>
 
-<a href="?page=meta_yookassa_payment_types&create">Создать новый тип платежей</a>
+<a class="button button-secondary" href="?page=meta_yookassa_payment_types&create">Создать новый тип платежей</a>
+<br />
 
-<table>
+<table class="wp-list-table widefat fixed striped meta-table">
   <thead>
     <tr>
-      <th>ID</th>
-      <th>Район</th>
-      <th>Реестровый номер</th>
-      <th>Тип платежа</th>
-      <th>Наименование квитанции</th>
-      <th>Ручное редактирование</th>
-      <th>Действия</th>
+      <th><b>ID</b></th>
+      <th><b>Район</b></th>
+      <th><b>Реестровый номер</b></th>
+      <th><b>Тип платежа</b></th>
+      <th><b>Наименование квитанции</b></th>
+      <th><b>Ручное редактирование</b></th>
+      <th><b>Действия</b></th>
     </tr>
   </thead>
   <tbody>
@@ -42,7 +50,7 @@ $tableName = $wpdb->prefix . 'metayookassa_payment_types';
       echo '<td class="numeric-cell" id="type_of_payment-' . $invoice->id . '">' . $invoice->type_of_payment . '</td>';
       echo '<td id="receipt_name-' . $invoice->id . '">' . $invoice->receipt_name . '</td>';
       echo '<td id="is_manual-' . $invoice->id . '">' . ($invoice->is_manual ? 'Да' : 'Нет') . '</td>';
-      echo '<td id="actions-' . $invoice->id . '"><a href="?page=meta_yookassa_payment_types&edit=' . $invoice->id . '">Редактировать</a> <a href="#"class="delete-link" data-id="' . $invoice->id . '">Удалить</a></td>';
+      echo '<td id="actions-' . $invoice->id . '"><a class="button button-secondary button-small" href="?page=meta_yookassa_payment_types&edit=' . $invoice->id . '">Редактировать</a> <a class="button button-secondary button-small" href="#"class="delete-link" data-id="' . $invoice->id . '">Удалить</a></td>';
       echo '</tr>';
     }
     ?>

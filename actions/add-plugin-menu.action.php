@@ -37,32 +37,6 @@ function settings_page() {
               submit_button();
           ?>
       </form>
-      <script>
-        document.getElementById('downloadDataButton').addEventListener('click', downloadData);
-        function downloadData() {
-          let nonce = '<?php echo wp_create_nonce('yookassa_donwload_data_nonce'); ?>';
-          jQuery.ajax({
-            url: '<?php echo admin_url('admin-ajax.php'); ?>',
-            type: 'POST',
-            data: {
-              action: 'yookassa_download_data',
-              nonce,
-            },
-            success: function (data) {
-              const blob = new Blob([data], { type: 'text/csv' });
-              const link = document.createElement('a');
-              link.href = window.URL.createObjectURL(blob);
-              link.download = `YookassaPayments${new Date().toISOString()}.csv`;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            },
-            error: function (error) {
-              console.log('Error:', error);
-            },
-          });
-        }
-      </script>
   </div>
   <?php
 }

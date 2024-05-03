@@ -2,7 +2,6 @@
 
 function yookassa_download_data() {
   error_log('yookassa_send_data method executed at ' . current_time('mysql'));
-  // check_ajax_referer('yookassa_donwload_data_nonce', 'nonce');
   send_message();
   exit();
 }
@@ -33,7 +32,6 @@ function send_message() {
     $content = $value;
     $temp_file = sys_get_temp_dir() . '/' . $filename;
     file_put_contents($temp_file, $content);
-    // $mail->addAttachment($temp_file, $filename);
     $attachments[] = $temp_file;
     echo 'Added attachment: ' . $filename . "\n";
   }
@@ -43,7 +41,6 @@ function send_message() {
     $content = iconv('UTF-8', 'CP866', $value);
     $temp_file = sys_get_temp_dir() . '/' . $filename;
     file_put_contents($temp_file, $content);
-    // $mail->addAttachment($temp_file, $filename);
     $attachments[] = $temp_file;
     echo 'Added attachment: ' . $filename . "\n";
   }

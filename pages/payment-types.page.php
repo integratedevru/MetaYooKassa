@@ -21,7 +21,7 @@ if (isset($_POST['button_update'])) {
   if ($edit_id !== $new_id) {
     $found = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableName WHERE id = %d", $new_id));
     if ($found) {
-      echo '<b>Запись c таким ID = ' . $new_id . ' уже существует!</b><br /><a href="#" onclick="history.go(-1)">Назад</a>';
+      echo '<div class="notice notice-error notice-alt"><p><b>Запись c таким ID = ' . $new_id . ' уже существует!</b></p></div><br /><a href="#" class="button button-primary" onclick="history.go(-1)">Назад</a>';
     }
   } else {
     $wpdb->update(
@@ -36,7 +36,7 @@ if (isset($_POST['button_update'])) {
       ),
       array('id' => $edit_id)
     );
-    echo '<b>Запись ' . $edit_id . ' успешно обновлена!</b> ';
+    echo '<div class="notice notice-success notice-alt"><p><b>Запись ' . $edit_id . ' успешно обновлена!</b></p></div> ';
     redirect('?page=meta_yookassa_payment_types');
   }
   exit;
@@ -50,7 +50,7 @@ if (isset($_POST['button_create'])) {
   $new_receipt_name = sanitize_text_field($_POST['new_receipt_name']);
   $found = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableName WHERE id = %d", $new_id));
   if ($found) {
-    echo '<b>Запись c таким ID = ' . $new_id . ' уже существует!</b><br /><a href="#" onclick="history.go(-1)">Назад</a>';
+    echo '<div class="notice notice-error notice-alt"><p><b>Запись c таким ID = ' . $new_id . ' уже существует!</b></p></div><br /><a href="#" class="button button-primary"  onclick="history.go(-1)">Назад</a>';
   } else {
     $wpdb->insert(
       $tableName,
@@ -63,7 +63,7 @@ if (isset($_POST['button_create'])) {
         'is_manual' => true
       )
     );
-    echo '<b>Запись ' . $new_id . ' успешно добавлена!</b> ';
+    echo '<div class="notice notice-success notice-alt"><p><b>Запись ' . $new_id . ' успешно добавлена!</b></p></div> ';
     redirect('?page=meta_yookassa_payment_types');
   }
   exit;
@@ -81,9 +81,9 @@ if (isset($_GET['delete'])) {
   $delete_id = intval($_GET['delete']);
   $result = $wpdb->delete($tableName, array('id' => $delete_id), array('%d'));
   if (!$result) {
-    echo '<b>Не удалось удалить запись ' . $delete_id . '!</b>';
+    echo '<div class="notice notice-error is-dismissible"><p><b>Не удалось удалить запись ' . $delete_id . '!</b></p></div>';
   } else {
-    echo '<b>Запись ' . $delete_id . ' успешно удалена!</b>';
+    echo '<div class="notice notice-success is-dismissible"><p><b>Запись ' . $delete_id . ' успешно удалена!</b></p></div>';
   }
 }
 
@@ -124,7 +124,7 @@ if (isset($_POST['button_import'])) {
       if (!empty($district) && !empty($reesterNumber) && !empty($typeOfPayment) && !empty($receiptName)) {
         $found = $wpdb->get_row($wpdb->prepare("SELECT * FROM $tableName WHERE reester_number = %s AND type_of_payment = %s AND region = %s", $reesterNumber, $typeOfPayment, $district));
         if ($found) {
-          echo 'Запись с реестровым номером "' . $reesterNumber . '", типом платежа "' . $typeOfPayment . '" и районом "' . $district . '" уже существует (ID = ' . $found->id . ').<br />';
+          echo '<div class="notice notice-error is-dismissible"><p>Запись с реестровым номером "' . $reesterNumber . '", типом платежа "' . $typeOfPayment . '" и районом "' . $district . '" уже существует (ID = ' . $found->id . ').</p></div>';
         } else {
           $wpdb->insert(
             $tableName,
@@ -139,7 +139,7 @@ if (isset($_POST['button_import'])) {
         }
       }
     }
-    echo 'Успешно добавлено: ' . $totalInserted;
+    echo '<div class="notice notice-success is-dismissible"><p>Успешно добавлено: ' . $totalInserted . '</p></div>';
   }
 }
 ?>
