@@ -24,6 +24,7 @@ function get_payment_types_sql() {
         reester_number VARCHAR(50) NOT NULL,
         type_of_payment VARCHAR(3) NOT NULL,
         receipt_name VARCHAR(50) NOT NULL,
+        is_manual BOOLEAN NOT NULL DEFAULT FALSE,
         PRIMARY KEY  (id)
     ) $charset_collate;";
     return $sql;
